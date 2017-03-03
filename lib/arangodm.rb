@@ -1,5 +1,11 @@
-require "arangodm/version"
+require 'pp'
+require 'rest-client'
+require 'json'
+require "arangodm/load"
 
 module Arangodm
-  # Your code goes here...
+
+
+  pp Arangodm::VERSION
+
 end
