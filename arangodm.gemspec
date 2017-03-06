@@ -31,6 +31,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1.14'
   spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'minitest', '~> 5.0'
-  spec.add_development_dependency 'rest-client', '~> 2.0.1'
+  spec.add_development_dependency 'minitest', '~> 5.10'
+  spec.add_development_dependency 'mocha', '~> 1.2'
+  spec.add_development_dependency 'rest-client', '~> 2.0'
+  spec.add_development_dependency 'simplecov'
 end

@@ -1,5 +1,6 @@
 module Arangodm
   class Database
+    extend Arangodm::Multiton
 
     attr_reader :name, :user, :password, :api, :jwt
 

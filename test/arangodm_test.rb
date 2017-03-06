@@ -6,6 +6,7 @@ class ArangodmTest < Minitest::Test
   end
 
   def test_it_does_something_useful
-    assert false
+    RestClient::Request.expects(:execute).returns(true)
+    # assert_equal RestClient::Request.execute('osman'), true
   end
 end

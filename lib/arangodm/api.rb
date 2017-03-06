@@ -7,21 +7,21 @@ module Arangodm
       @host = host
     end
 
-    def post(address:, body:, headers:)
-      unleash(address: address, type: :post, body: body, headers: headers)
+    def method_missing(method, **arguments, &block)
+      available_delegates = [:post, :get, :put, :delete]
+      if available_delegates.include? method
+        unleash(
+          address: arguments[:address],
+          type: method,
+          body: arguments[:body],
+          headers: arguments[:headers]
+        )
+      else
+        super
+      end
     end
 
-    def get(address:, body:, headers:)
-      unleash(address: address, type: :get, body: body, headers: headers)
-    end
-
-    def put(address:, body:, headers:)
-      unleash(address: address, type: :put, body: body, headers: headers)
-    end
-
-    def delete(address:, body:, headers:)
-      unleash(address: address, type: :delete, body: body, headers: headers)
-    end
+    private
 
     def unleash(address:, type:, body:, headers:)
       params = {
