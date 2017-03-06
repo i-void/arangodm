@@ -5,7 +5,10 @@ require "arangodm/load"
 
 module Arangodm
 
+  class << self
+    attr_accessor :host
+  end
 
-  pp Arangodm::VERSION
+  @host = 'http://127.0.0.1:8529'
 
 end

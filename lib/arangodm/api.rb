@@ -1,10 +1,10 @@
 module Arangodm
   class Api
 
-    attr_reader :host
+    attr_reader :server
 
-    def initialize(host: 'http://127.0.0.1:8529')
-      @host = host
+    def initialize(server: nil)
+      @server = server ? Arangodm::Server.list[server] : Arangodm::Server.default
     end
 
     def method_missing(method, **arguments, &block)
@@ -26,10 +26,10 @@ module Arangodm
     def unleash(address:, type:, body:, headers:)
       params = {
         method: type,
-        url: "#{host}/#{address}",
+        url: "#{server.host}/#{address}",
         timeout: 10
       }
-      params[:payload] = body if body
+      params[:payload] = body.to_json if body
       params[:headers] = headers if headers
       RestClient::Request.execute params
     end

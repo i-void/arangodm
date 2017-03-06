@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class ApiTest < Minitest::Test
 
@@ -11,7 +11,7 @@ class ApiTest < Minitest::Test
 			method: :post,
 			url: "#{@api.host}/test-url",
 			timeout: 10,
-			payload: {body: 'ok'},
+			payload: {body: 'ok'}.to_json,
 			headers: {a_header: 'ok'}
 		}
 		RestClient::Request.expects(:execute).with(params).returns(true)
