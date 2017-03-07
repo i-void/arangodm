@@ -36,4 +36,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'simplecov'
 
   spec.add_dependency 'rest-client', '~> 2.0'
+  spec.add_dependency 'active_attr'
 end
