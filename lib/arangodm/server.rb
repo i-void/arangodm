@@ -1,18 +1,14 @@
 module Arangodm
   class Server
+    include ActiveAttr::Default
     extend Arangodm::Multiton
 
-    attr_reader :name, :host
+    attribute :name
+    attribute :host, default: 'http://127.0.0.1:8529'
 
-    def initialize(name: nil, host: 'http://127.0.0.1:8529')
-      @api = Arangodm::Api.new(server: name)
-      @name = name
-      @host = host
-    end
-
-    def current_db
-      result = @api.get(address: '_api/database/current').body
-      JSON.parse(result)['result']
+    def current_db(api)
+      result = api.get(address: '_api/database/current')
+      result['result']
     end
   end
 end

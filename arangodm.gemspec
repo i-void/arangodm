@@ -14,6 +14,9 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/codem4ster/arangodm"
   spec.license       = 'MIT'
 
+  spec.metadata["yard.run"] = "yri" # use "yard" to build full HTML docs.
+
+
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
@@ -37,4 +40,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'rest-client', '~> 2.0'
   spec.add_dependency 'active_attr'
+  spec.add_dependency 'sig'
 end
