@@ -5,7 +5,7 @@ class UserTest < Minitest::Test
 	def test_initialization
 		user = Arangodm::User.new(
 			username: 'root',
-			password: '12345678'
+			password: 'kaoskaos'
 		)
 
 		server = Arangodm::Server.new
@@ -16,6 +16,6 @@ class UserTest < Minitest::Test
 
 		api.authenticate(user: user)
 
-		puts api.jwt
+		puts api.db_name
 	end
 end

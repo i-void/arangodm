@@ -1,18 +1,17 @@
 module Arangodm
+
+  # @attr [String] name
+  # @attr [Integer] id
+  # @attr [String] path
+  # @attr [true|false] is_system
   class Database
+    include ActiveAttr::Default
     extend Arangodm::Multiton
 
-    attr_reader :name, :user, :password, :api, :jwt
-
-    def initialize(name:, user:, password:, server: nil, api: Api.new(server: server))
-      @name = name
-      @user = user
-      @password = password
-      @api = api
-
-      api.authenticate(user, password)
-    end
-
+    attribute :name, type: String
+    attribute :id, type: Integer
+    attribute :path, type: String
+    attribute :is_system, type: Boolean
 
   end
 end

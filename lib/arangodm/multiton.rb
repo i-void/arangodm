@@ -1,4 +1,6 @@
 module Arangodm
+
+  # Adds multiton pattern for generating class instances, and store them inside self.
   module Multiton
 
     # @return [instance] default multiton instance

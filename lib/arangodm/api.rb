@@ -1,4 +1,7 @@
 module Arangodm
+
+  # @attr [Arangodm::Server] server
+  # @attr_reader [String] jwt
   class Api
     # @!method get(address:,body:,headers:,authorized:true)
     # @!method post(address:,body:,headers:,authorized:true)
@@ -9,17 +12,13 @@ module Arangodm
     # @param [Hash{Symbol=>String}] headers
     # @param [True|False] authorized
     # @return [RestClient::Response]
-
     include ActiveAttr::Default
 
-    # @!attribute server [rw]
-    #   @return [Arangodm::Server]
     attribute :server
 
     class ResponseError < StandardError; end
     class NotConnectedError < StandardError; end
 
-    # @return [String]
     attr_reader :jwt
 
     # Hosts the post, get, put, delete methods
@@ -35,7 +34,7 @@ module Arangodm
             type: method,
             body: arguments[:body],
             headers: arguments[:headers],
-            authorized: arguments[:authorized]
+            authorized: (arguments[:authorized].nil? ? true : arguments[:authorized])
           )
         rescue RestClient::Exception => err
           raise ResponseError.new([err.message].join(':'))
@@ -55,8 +54,9 @@ module Arangodm
       @jwt = user.authenticate(self)
     end
 
-    def db
-      @db ||= server.current_db(self)
+    # @return [String] the selected database of the current server
+    def db_name
+      @db ||= server.db_name(self)
     end
 
     private
