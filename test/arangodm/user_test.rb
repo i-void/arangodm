@@ -5,7 +5,7 @@ class UserTest < Minitest::Test
 	def test_initialization
 		user = Arangodm::User.new(
 			username: 'root',
-			password: 'kaoskaos'
+			password: ''
 		)
 
 		server = Arangodm::Server.new
