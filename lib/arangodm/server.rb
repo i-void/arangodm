@@ -32,16 +32,17 @@ module Arangodm
     def method_missing(method, **arguments, &block)
       available_delegates = [:post, :get, :put, :delete]
       if available_delegates.include? method
+        params = {
+          address: arguments[:address],
+          type: method,
+          body: arguments[:body],
+          headers: arguments[:headers],
+          authorized: (arguments[:authorized].nil? ? true : arguments[:authorized])
+        }
         begin
-          response = unleash(
-            address: arguments[:address],
-            type: method,
-            body: arguments[:body],
-            headers: arguments[:headers],
-            authorized: (arguments[:authorized].nil? ? true : arguments[:authorized])
-          )
+          response = unleash params
         rescue RestClient::Exception => err
-          raise ResponseError.new([err.message].join(':'))
+          raise ResponseError.new([err.message].join(':') + "\n#{params.pretty_inspect}")
         else
           JSON.parse(response.body, {:symbolize_names => true})
         end
@@ -61,12 +62,30 @@ module Arangodm
     end
 
 
-    # @return [Arangodm::Database] the selected database of the current server
-    def db
-      result = get(address: '_api/database/current')[:result]
-      result.keys.each { |key| result[key.to_s.underscore.to_sym] = result.delete(key) }
-      result[:server] = self
-      Arangodm::Database.new result
+    # If name given returns the named database as Database object
+    #   else returns default database
+    #
+    # @param [String] name
+    # @return [Arangodm::Database]
+    def db(name: nil)
+      if name
+        result = get(address: "_db/#{name}/_api/database/current")[:result]
+        result.keys.each { |key| result[key.to_s.underscore.to_sym] = result.delete(key) }
+        result[:server] = self
+        Arangodm::Database.new(result)
+      else
+        Arangodm::Database.default
+      end
+    end
+
+
+    # Sets the named database as default
+    #
+    # @return [Arangodm::Database]
+    def db=(name)
+      db(name: name).tap do |db|
+        db.set_as_default
+      end
     end
 
 
@@ -85,7 +104,7 @@ module Arangodm
     # Creates a database with given users
     #
     # @param [String] db_name name of the database
-    # @param [Array<Arangodm::User>] user_list: which users can use this db
+    # @param [Array<Arangodm::User>] user_list which users can use this db
     # @return [Boolean]
     def create_db(db_name:, user_list: [user])
       post(

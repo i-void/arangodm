@@ -8,4 +8,3 @@ require "arangodm/load"
 module Arangodm
 end
 
-

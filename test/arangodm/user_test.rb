@@ -11,6 +11,15 @@ class UserTest < Minitest::Test
 		server = Arangodm::Server.new
 		server.autheticate(user: user)
 
-		puts server.db.name
+		server.db = 'Blog'
+		server.db.collection(name: 'user')
+
+
+		# @type [Arangodm::Database]
+		# database = server.db
+		# pp database.path
+		#coll = database.drop_collection(name: '_osman', is_system: true)
+		#pp database.create_collection name: 'osman'
+		#pp database.truncate_collection name: 'osman'
 	end
 end
