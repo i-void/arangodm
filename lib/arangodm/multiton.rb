@@ -3,14 +3,14 @@ module Arangodm
   # Adds multiton pattern for generating class instances, and store them inside self.
   module Multiton
 
-    # @return [instance] default multiton instance
+    # @return [String] default multiton instance name
     def default
       list[@default]
     end
 
     # Sets the default multiton instance
-    # @param [instance] val default instance for multiton
-    # @return [instance]
+    # @param [String] val default instance name for multiton
+    # @return [String]
     def default=(val)
       @default = val
     end
