@@ -8,6 +8,7 @@ module Arangodm
   class Database
     # @!parse extend Arangodm::Multiton::ClassMethods
 
+    class CollectionTypeError < RuntimeError;end
 
     include ActiveAttr::Default
     include Arangodm::Multiton
@@ -72,11 +73,31 @@ module Arangodm
       )
     end
 
+    # Gets the collection from database
+    #
+    # @param [String] name collection name
+    # @return [Arangodm::Document, Arangodm::Edge]
     def collection(name:)
-      response = server.get(
-        address: [address, '_api/collection', name].join('/')
-      )
-      Arangodm::Collection::TYPES.lazy.map { |(key, value)| key if value == response[:type] }.take(1)
+
+
+      # runs edge or document method
+      send(type, name: name, response: response)
+    end
+
+    # Gets the edge from database
+    def edge(name:)
+      response = collection_data(name: name)
+      type = Arangodm::Collection::TYPES.find { |(_, value)| value == response[:type] }.first
+      raise CollectionTypeError.new("Type of #{name} is document") if type == :document
+      Arangodm::Edge.new(response)
+    end
+
+    # Gets the document from database
+    def document(name:)
+      response = collection_data(name: name)
+      type = Arangodm::Collection::TYPES.find { |(_, value)| value == response[:type] }.first
+      raise CollectionTypeError.new("Type of #{name} is edge") if type == :edge
+      Arangodm::Document.new(response)
     end
 
 
@@ -101,6 +122,15 @@ module Arangodm
     # @return [Hash{Symbol=>String}] response of arango server
     def truncate_collection(name:)
       server.put address: [self.adress, '_api/collection', name, 'truncate'].join('/')
+    end
+
+    private
+
+    # @return [Hash{Symbol=>String}] collection data
+    def collection_data(name:)
+      server.get(
+        address: [address, '_api/collection', name].join('/')
+      )
     end
 
   end

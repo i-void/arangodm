@@ -21,8 +21,8 @@ module Arangodm
     attr_reader :jwt
     attr_reader :user
 
-    class ResponseError < StandardError; end
-    class NotConnectedError < StandardError; end
+    class ResponseError < RuntimeError; end
+    class NotConnectedError < RuntimeError; end
 
 
     # Hosts the post, get, put, delete methods
