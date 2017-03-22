@@ -1,10 +1,13 @@
 module Arangodm
 
+  # @attr [String] name Name of the server
+  #   - default: 'default'
   # @attr [String] host
   #   - default: http://127.0.0.1:8529
   # @attr_reader [String] jwt
   # @attr_reader [Arangodm::User] user
   class Server
+    # @!parse extend Arangodm::Multiton::ClassMethods
     # @!method get(address:,body:,headers:,authorized:true)
     # @!method post(address:,body:,headers:,authorized:true)
     # @!method put(address:,body:,headers:,authorized:true)
@@ -16,7 +19,9 @@ module Arangodm
     # @return [RestClient::Response]
 
     include ActiveAttr::Default
+    include Arangodm::Multiton
 
+    attribute :name, default: 'default'
     attribute :host, default: 'http://127.0.0.1:8529'
     attr_reader :jwt
     attr_reader :user
