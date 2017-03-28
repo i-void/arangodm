@@ -1,9 +1,8 @@
 module Arangodm
-
   # @attr [String] username
   # @attr [String] password
   # @attr_reader [String] jwt
-	class User
+  class User
     include ActiveAttr::Default
 
     attribute :username
@@ -19,11 +18,10 @@ module Arangodm
       return jwt if jwt
       result = api.post(
         address: '_open/auth',
-        body: {username: username, password: password},
+        body: { username: username, password: password },
         authorized: false
       )
       @jwt = result[:jwt]
     end
-
-	end
+  end
 end

@@ -1,18 +1,16 @@
 module Arangodm
+  # This is the module which will be included in models
   module Model
-
     def self.included(base)
       base.extend ClassMethods
     end
 
-
-
+    # Static methods
     module ClassMethods
-
       # @raise [RuntimeError] if collection not set
       # @return [Arangodm::Collection]
       def collection
-        @collection || raise(RuntimeError.new("Please give a collection name for this model"))
+        @collection || raise('Please give a collection name for this model')
       end
 
       # Sets the collection for model
@@ -22,11 +20,6 @@ module Arangodm
         db = Arangodm::Database.default
         @collection = db.collection(name: name)
       end
-
-
-
-
     end
-
   end
 end

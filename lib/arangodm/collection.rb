@@ -1,25 +1,37 @@
 module Arangodm
-
   # @attr [String] name
   # @attr [Arangodm::Database] db
+  # @attr [String] name of the collection to be created
+  # @attr [Integer] replication_factor
+  # @attr [Boolean] allow_user_keys (see keyOptions => AllowUserKeys)
+  # @attr [Boolean] fire_and_forget (see waitForSync)
+  # @attr [Boolean] only_in_memory (see isVolatile)
+  # @attr [Integer] number_of_shards
+  # @attr [Arangodm::Collection::TYPES] type (see type)
+  # @attr [Boolean] is_system (see isSystem)
   class Collection
     include ActiveAttr::Default
 
     TYPES = {
       document: 2,
       edge: 3
-    }
+    }.freeze
 
     attribute :name
     attribute :db
     attribute :is_system
     attribute :status
+    attribute :type
+    attribute :replication_factor, default: 1
+    attribute :allow_user_keys, default: false
+    attribute :fire_and_forget, default: true
+    attribute :only_in_memory, default: false
+    attribute :number_of_shards, default: 1
 
     # @return [String] api adress
     def adress
       [db.adress, "_collection/#{name}"].join('/')
     end
-
 
     # Truncates this collection
     #
@@ -58,7 +70,6 @@ module Arangodm
       db.collection_document_count name: name
     end
 
-
     # Changes collection properties
     #
     # @raise [RuntimeError] if no changeable data given
@@ -78,6 +89,5 @@ module Arangodm
     def rename(name:)
       db.rename_collection name: name
     end
-
   end
 end

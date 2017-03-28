@@ -1,17 +1,17 @@
 module Arangodm
-
-  # Adds multiton pattern for generating class instances, and store them inside self.
+  # Adds multiton pattern for generating class instances, and store them inside
+  #   self.
   module Multiton
-
     # Sets this database as default database for processes
     def set_as_default
-      self.class.default = self.name
+      self.class.default = name
     end
 
     def self.included(base)
       base.extend ClassMethods
     end
 
+    # Static methods
     module ClassMethods
       # @return [String] default multiton instance name
       def default
