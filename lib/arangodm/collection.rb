@@ -11,6 +11,7 @@ module Arangodm
   # @attr [Boolean] is_system (see isSystem)
   class Collection
     include ActiveAttr::Default
+    include Arangodm::DocumentOperations
 
     TYPES = {
       document: 2,
@@ -30,7 +31,7 @@ module Arangodm
 
     # @return [String] api adress
     def adress
-      [db.adress, "_collection/#{name}"].join('/')
+      [db.adress, '_collection', name].join('/')
     end
 
     # Truncates this collection

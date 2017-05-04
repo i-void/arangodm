@@ -9,7 +9,17 @@ class UserTest < Minitest::Test
     server.autheticate(user: user)
 
     server.db = 'Blog'
-    server.db.collection(name: 'user')
+    collection = server.db.collection(name: 'user')
+
+    doc = collection.find(id: 1378572)
+    pp doc
+    pp doc.surname
+
+    doc = Arangodm::Document.new(collection: collection, attributes:{name: 'cüneyt', surname: 'arkın'})
+    #doc.save
+
+    pp doc
+
 
 
     # @type [Arangodm::Database]

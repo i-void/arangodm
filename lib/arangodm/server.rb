@@ -28,9 +28,6 @@ module Arangodm
     class ResponseError < RuntimeError; end
     class NotConnectedError < RuntimeError; end
 
-    def respond_to_missing?
-      true
-    end
 
     # Hosts the post, get, put, delete methods
     #

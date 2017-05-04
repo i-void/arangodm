@@ -67,30 +67,8 @@ module Arangodm
     # @param [String] name collection name
     # @return [Arangodm::Document, Arangodm::Edge]
     def collection(name:)
-      # runs edge or document method
-      send(type, name: name, response: response)
-    end
-
-    # Gets the edge from database
-    def edge(name:)
       response = collection_data(name: name)
-      type = Arangodm::Collection::TYPES.find do |(_, value)|
-        value == response[:type]
-      end.first
-      if type == :document
-        raise CollectionTypeError, "Type of #{name} is document"
-      end
-      Arangodm::Edge.new(response)
-    end
-
-    # Gets the document from database
-    def document(name:)
-      response = collection_data(name: name)
-      type = Arangodm::Collection::TYPES.find do |(_, value)|
-        value == response[:type]
-      end.first
-      raise CollectionTypeError, "Type of #{name} is edge" if type == :edge
-      Arangodm::Document.new(response)
+      Arangodm::Collection.new(response.merge(db: self))
     end
   end
 end
