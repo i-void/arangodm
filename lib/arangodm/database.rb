@@ -62,6 +62,28 @@ module Arangodm
       result.map { |collection| collection[:name] }
     end
 
+    # Gets the edges of this database
+    #
+    # @param [String] direction in or out
+    # @return [Array<String>]
+    def edges(collection:, start_node:, direction: nil)
+      path = [address, '_api/edges', collection.name].join('/')
+      ext = [ "vertex=#{start_node.name}", start_node.id ].join('/')
+      direction = (direction) ? "&direction=#{direction}" : ''
+      edges = server.get(
+        address: [path, ext].join('?') + direction
+      )[:edges]
+      edges.map do |edge|
+        Arangodm::Edge.new(
+          collection: collection,
+          from: edge[:'_from'],
+          to: edge[:'_to'],
+          id: edge[:'_key'],
+          rev: edge[:'_rev']
+        )
+      end
+    end
+
     # Gets the collection from database
     #
     # @param [String] name collection name

@@ -90,5 +90,9 @@ module Arangodm
     def rename(name:)
       db.rename_collection name: name
     end
+
+    def edges(start_node:, direction: nil)
+      db.edges collection: self, start_node: start_node, direction: direction
+    end
   end
 end

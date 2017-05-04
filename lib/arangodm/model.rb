@@ -7,19 +7,45 @@ module Arangodm
 
     # Static methods
     module ClassMethods
-      # @raise [RuntimeError] if collection not set
-      # @return [Arangodm::Collection]
-      def collection
-        @collection || raise('Please give a collection name for this model')
+      def db(name=nil)
+        if name
+          Arangodm::Server.default.db = name
+        else
+          @db ||= Arangodm::Database.default
+        end
       end
 
-      # Sets the collection for model
+      # Sets and gets the collection for model
       #
       # @return [Arangodm::Collection]
-      def collection=(name)
-        db = Arangodm::Database.default
-        @collection = db.collection(name: name)
+      def collection(name=nil)
+        if name
+          @collection = db.collection(name: name)
+        else
+          @collection || raise('Please give a collection name for this model')
+        end
       end
+
+      # finds the document
+      def find(id)
+        collection.find(id: id)
+      end
+
+      # creates multiple documents
+      def create_documents(documents)
+        collection.create_documents documents: documents
+      end
+
+      # updates multiple documents
+      def update_documents(documents)
+        collection.update_documents documents: documents
+      end
+
+      # updates multiple documents
+      def delete_documents(keys)
+        collection.delete_documents keys: keys
+      end
+
     end
   end
 end

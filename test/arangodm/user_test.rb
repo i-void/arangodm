@@ -11,12 +11,9 @@ class UserTest < Minitest::Test
     server.db = 'Blog'
     collection = server.db.collection(name: 'user')
 
-    doc = collection.find(id: 1378572)
-    pp doc
-    pp doc.surname
-
-    doc = Arangodm::Document.new(collection: collection, attributes:{name: 'cüneyt', surname: 'arkın'})
-    #doc.save
+    doc = collection.find(id: 1378202)
+    doc.surname = 'Peker Elibol'
+    doc.save
 
     pp doc
 
