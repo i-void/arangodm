@@ -18,14 +18,18 @@ module Arangodm
       parts.join('/')
     end
 
-    # Hosts the post, get, put, delete methods
+    # Binds collection columns to methods
     #
-    # @raise [ResponseError] if restclient raises errors
+    # @raise undefined method if column not found
     # @return [Hash] response body of the RestClient
     def method_missing(method, *arguments)
       return @attributes[method.to_sym] if @attributes.keys.include?(method)
       if @attributes.keys.map { |m| (m.to_s + '=').to_sym}.include?(method)
         @attributes[method.to_s.gsub('=', '').to_sym] = arguments[0]
+      elsif collection.respond_to?(method, self)
+        collection.send(method, self)
+      else
+        super
       end
     end
 
@@ -50,6 +54,17 @@ module Arangodm
 
     def delete
       collection.db.server.delete(address: arango_path(id: id))
+    end
+
+    class << self
+      def create_from_arango(hash:, collection:)
+        new(
+          id: hash['_key'.to_sym],
+          rev: hash['_rev'.to_sym],
+          collection: collection,
+          attributes: hash.except(:'_key', :'_rev', :'_id')
+        )
+      end
     end
 
   end

@@ -88,8 +88,9 @@ module Arangodm
     #
     # @param [String] name collection name
     # @return [Arangodm::Document, Arangodm::Edge]
-    def collection(name:)
+    def collection(name:, type: nil)
       response = collection_data(name: name)
+      raise CollectionTypeError, "Collection not found with name: #{name}" if !type.nil? && response[:type] != type
       Arangodm::Collection.new(response.merge(db: self))
     end
   end

@@ -91,6 +91,10 @@ module Arangodm
       db.rename_collection name: name
     end
 
+    # Returns the edges which type is this collection
+    #
+    # @param [String] start_node id of the start vertex of graph
+    # @return [Array<Arangodm::Edge>]
     def edges(start_node:, direction: nil)
       db.edges collection: self, start_node: start_node, direction: direction
     end
