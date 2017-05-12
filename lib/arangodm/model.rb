@@ -17,22 +17,13 @@ module Arangodm
 
       def has_many(edge, as: edge)
         collection.define_singleton_method(edge) do |document|
-          result = db.server.post(
-            address: [db.address, '_api/traversal'].join('/'),
-            body: {
-              startVertex: [name, document.id].join('/'),
-              edgeCollection: edge,
-              direction: 'outbound',
-              maxDepth: 1,
-              init: "result.count = 0; result.vertices = [ ];",
-              visitor: "result.count++; result.vertices.push(vertex);",
-              uniqueness: {vertices: "global"}
-            }
-          )[:result]
-          result_collection = db.collection(name: as, type: Arangodm::Collection::TYPES[:document])
-          result[:vertices].map do |vertex|
-            Arangodm::Document.create_from_arango hash: vertex, collection: result_collection
-          end
+          args = { start_vertex: document, edge_collection: edge,
+                   direction: 'outbound', max_depth: 1,
+                   init: "result.count = 0; result.vertices = [ ];",
+                   visitor: "result.count++; result.vertices.push(vertex);",
+                   uniqueness: {vertices: "global"} }
+          traversal = Traversal.new args
+          traversal.run(db: db, as: as)
         end
       end
 

@@ -74,13 +74,7 @@ module Arangodm
         address: [path, ext].join('?') + direction
       )[:edges]
       edges.map do |edge|
-        Arangodm::Edge.new(
-          collection: collection,
-          from: edge[:'_from'],
-          to: edge[:'_to'],
-          id: edge[:'_key'],
-          rev: edge[:'_rev']
-        )
+        Arangodm::Edge.create_from_arango(hash: edge, collection: collection)
       end
     end
 

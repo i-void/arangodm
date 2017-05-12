@@ -28,13 +28,16 @@ module Arangodm
     class ResponseError < RuntimeError; end
     class NotConnectedError < RuntimeError; end
 
+    def respond_to_missing?(method_name)
+      %i[post get put delete].include?(method_name) || super
+    end
 
     # Hosts the post, get, put, delete methods
     #
     # @raise [ResponseError] if restclient raises errors
     # @return [Hash] response body of the RestClient
     def method_missing(method, **arguments, &block)
-      available_delegates = [:post, :get, :put, :delete]
+      available_delegates = %i[post get put delete]
       if available_delegates.include? method
         send_request(arguments, method)
       else

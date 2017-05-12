@@ -1,6 +1,6 @@
 module Arangodm
+  # Builds query
   class Query
-
     attr_reader :collection, :sign
 
     def initialize(collection:, sign: nil)
@@ -18,7 +18,7 @@ module Arangodm
       @text += "\n\t LIMIT #{val}"
     end
 
-    def retscope(val=nil)
+    def retscope(val = nil)
       val ||= sign
       @text += "\n\t RETURN #{val}"
     end
@@ -27,19 +27,14 @@ module Arangodm
       retscope
     end
 
-    def run(count=false, batch_size=500)
+    def run(count = false, batch_size = 500)
       response = collection.db.server.post(
-        address: "_api/cursor",
-        body: {
-          query: @text,
-          count: count,
-          batchSize: batch_size
-        }
+        address: '_api/cursor',
+        body: { query: @text, count: count, batchSize: batch_size }
       )
       response[:result].map do |doc|
         Arangodm::Document.create_from_arango hash: doc, collection: collection
       end
     end
-
   end
 end

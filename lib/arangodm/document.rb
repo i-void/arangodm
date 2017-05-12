@@ -12,6 +12,10 @@ module Arangodm
       @attributes = attributes
     end
 
+    def id_path
+      [collection.name, id].join('/')
+    end
+
     def arango_path(id: nil)
       parts = [collection.db.address, '_api/document', collection.name]
       parts << id.to_s if id
