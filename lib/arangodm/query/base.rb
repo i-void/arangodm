@@ -90,6 +90,5 @@ module Arangodm::Query
       @text += "RETURN #{val} "
       self
     end
-
   end
 end
